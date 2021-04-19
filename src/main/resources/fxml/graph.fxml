@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.ib.Controller">
+    <left>
+        <VBox alignment="CENTER" prefHeight="591.0" prefWidth="171.0" style="-fx-alignment: top-center;" BorderPane.alignment="CENTER">
+            <children>
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Schemat punktowania:" textAlignment="CENTER">
+                    <VBox.margin>
+                        <Insets />
+                    </VBox.margin>
+                </Text>
+                <HBox alignment="CENTER" prefHeight="10.0" prefWidth="138.0">
+                    <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Zgodność">
+                            <HBox.margin>
+                                <Insets right="10.0" />
+                            </HBox.margin>
+                        </Text>
+                        <TextArea fx:id="txtComp" accessibleRole="TEXT_FIELD" minHeight="-Infinity" prefHeight="26.0" prefWidth="138.0" />
+                    </children>
+                    <VBox.margin>
+                        <Insets left="5.0" right="5.0" top="5.0" />
+                    </VBox.margin>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="10.0" prefWidth="138.0">
+                    <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Niezgodność">
+                            <HBox.margin>
+                                <Insets right="10.0" />
+                                </HBox.margin>
+                        </Text>
+                        <TextArea fx:id="txtInCom" accessibleRole="TEXT_FIELD" minHeight="-Infinity" prefHeight="26.0" prefWidth="121.0" />
+                    </children>
+                    <VBox.margin>
+                        <Insets left="5.0" right="5.0" top="5.0" />
+                    </VBox.margin>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="10.0" prefWidth="138.0">
+                    <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Kara">
+                            <HBox.margin>
+                                <Insets right="10.0" />
+                            </HBox.margin>
+                        </Text>
+                        <TextArea fx:id="txtGap" accessibleRole="TEXT_FIELD" minHeight="-Infinity" prefHeight="26.0" prefWidth="175.0" />
+                    </children>
+                    <VBox.margin>
+                        <Insets left="5.0" right="5.0" top="5.0" />
+                    </VBox.margin>
+                </HBox>
+            <HBox alignment="CENTER" prefHeight="10.0" prefWidth="138.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Okno filtracji">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </Text>
+                  <TextArea fx:id="txtWindow" accessibleRole="TEXT_FIELD" minHeight="-Infinity" prefHeight="26.0" prefWidth="138.0" />
+               </children>
+               <VBox.margin>
+                  <Insets left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="10.0" prefWidth="138.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Próg filtra">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </Text>
+                  <TextArea fx:id="txtThreshold" accessibleRole="TEXT_FIELD" minHeight="-Infinity" prefHeight="26.0" prefWidth="138.0" />
+               </children>
+               <VBox.margin>
+                  <Insets left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </HBox>
+                  <Button fx:id="btnGenerate" mnemonicParsing="false" onAction="#onClick" prefHeight="26.0" prefWidth="195.0" text="Wygeneruj">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </Button>
+                  <TextArea fx:id="txtParam" minHeight="-Infinity" prefHeight="196.0" prefWidth="171.0" VBox.vgrow="ALWAYS">
+                      <font>
+                          <Font name="Monospaced Regular" size="12.0" />
+                      </font>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+                  </TextArea>
+                  <Button fx:id="btnSaveFile" mnemonicParsing="false" onAction="#onClickSave" prefHeight="26.0" prefWidth="270.0" text="Zapisz">
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="btnGraph" mnemonicParsing="false" onAction="#onClickGraph" prefHeight="26.0" prefWidth="176.0" text="Rysunek">
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </Button>
+            </children>
+            <opaqueInsets>
+                <Insets />
+            </opaqueInsets>
+         <BorderPane.margin>
+            <Insets bottom="1.0" />
+         </BorderPane.margin>
+        </VBox>
+    </left>
+    <top>
+        <HBox alignment="CENTER" prefHeight="72.0" prefWidth="819.0" style="-fx-alignment: center-left;" BorderPane.alignment="CENTER">
+            <children>
+            <VBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="170.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Algorytm dopasowania:" textAlignment="CENTER">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </Text>
+                  <ChoiceBox fx:id="choiceAlgorithm" prefWidth="150.0">
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                  </ChoiceBox>
+               </children>
+            </VBox>
+                <VBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="170.0">
+                    <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Wczytanie sekwencji:" textAlignment="CENTER">
+                            <VBox.margin>
+                                <Insets />
+                            </VBox.margin>
+                        </Text>
+                        <ChoiceBox fx:id="choiceMethod" prefWidth="150.0">
+                            <VBox.margin>
+                                <Insets top="5.0" />
+                            </VBox.margin>
+                        </ChoiceBox>
+                    </children>
+                </VBox>
+                <VBox alignment="CENTER" prefHeight="76.0" prefWidth="486.0" style="-fx-alignment: top-center;">
+                    <children>
+                        <HBox alignment="CENTER" prefHeight="35.0" prefWidth="638.0">
+                            <children>
+                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sekwencja I:" textAlignment="CENTER" wrappingWidth="80.0">
+                                    <HBox.margin>
+                                        <Insets right="5.0" />
+                                    </HBox.margin>
+                                </Text>
+                                <TextArea fx:id="txtSeq1" prefHeight="38.0" prefWidth="715.0" />
+                                <Button fx:id="btnFile1" disable="true" minWidth="-Infinity" mnemonicParsing="false" onAction="#onClickFile1" prefHeight="38.0" prefWidth="50.0" text="Plik I" />
+                            </children>
+                     <VBox.margin>
+                        <Insets right="10.0" />
+                     </VBox.margin>
+                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="38.0" prefWidth="695.0">
+                            <children>
+                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sekwencja II:" textAlignment="CENTER" wrappingWidth="80.0">
+                                    <HBox.margin>
+                                        <Insets right="5.0" />
+                                    </HBox.margin>
+                                </Text>
+                                <TextArea fx:id="txtSeq2" prefHeight="38.0" prefWidth="732.0" />
+                                <Button fx:id="btnFile2" disable="true" minWidth="-Infinity" mnemonicParsing="false" onAction="#onClickFile2" prefHeight="37.0" prefWidth="50.0" text="Plik II" />
+                            </children>
+                     <VBox.margin>
+                        <Insets right="10.0" />
+                     </VBox.margin>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+    </top>
+   <center>
+        <LineChart fx:id="chart" prefHeight="528.0" prefWidth="624.0" BorderPane.alignment="CENTER">
+            <xAxis>
+                <NumberAxis label="sekwencja #1" side="TOP" />
+            </xAxis>
+            <yAxis>
+                <NumberAxis label="sekwencja #2" side="LEFT" />
+            </yAxis>
+        </LineChart>
+   </center>
+</BorderPane>
