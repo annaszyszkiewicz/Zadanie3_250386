@@ -190,12 +190,6 @@ public class Controller {
                 result.append("\n");
                 result.append("\n");
 
-                XYChart.Series<Integer, Integer> data = new XYChart.Series<>();
-                for (int i = 0; i < pathList.get(0).size(); i++) {
-                    data.getData().add(new XYChart.Data<>(pathList.get(0).getPoint(i)[0], -pathList.get(0).getPoint(i)[1]));
-                }
-                chart.getData().clear();
-                chart.getData().add(data);
 
             } else {
                 double comp = Double.parseDouble(txtComp.getText().toString());

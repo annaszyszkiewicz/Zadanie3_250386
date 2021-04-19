@@ -28,7 +28,7 @@
                                 <Insets right="10.0" />
                             </HBox.margin>
                         </Text>
-                        <TextArea fx:id="txtComp" accessibleRole="TEXT_FIELD" minHeight="-Infinity" prefHeight="26.0" prefWidth="138.0" />
+                        <TextArea fx:id="txtComp" accessibleRole="TEXT_FIELD" disable="true" minHeight="-Infinity" prefHeight="26.0" prefWidth="138.0" />
                     </children>
                     <VBox.margin>
                         <Insets left="5.0" right="5.0" top="5.0" />
@@ -41,7 +41,7 @@
                                 <Insets right="10.0" />
                                 </HBox.margin>
                         </Text>
-                        <TextArea fx:id="txtInCom" accessibleRole="TEXT_FIELD" minHeight="-Infinity" prefHeight="26.0" prefWidth="121.0" />
+                        <TextArea fx:id="txtInCom" accessibleRole="TEXT_FIELD" disable="true" minHeight="-Infinity" prefHeight="26.0" prefWidth="121.0" />
                     </children>
                     <VBox.margin>
                         <Insets left="5.0" right="5.0" top="5.0" />
@@ -54,7 +54,7 @@
                                 <Insets right="10.0" />
                             </HBox.margin>
                         </Text>
-                        <TextArea fx:id="txtGap" accessibleRole="TEXT_FIELD" minHeight="-Infinity" prefHeight="26.0" prefWidth="175.0" />
+                        <TextArea fx:id="txtGap" accessibleRole="TEXT_FIELD" disable="true" minHeight="-Infinity" prefHeight="26.0" prefWidth="175.0" />
                     </children>
                     <VBox.margin>
                         <Insets left="5.0" right="5.0" top="5.0" />
