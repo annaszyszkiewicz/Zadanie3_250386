@@ -92,48 +92,50 @@ public class Controller {
 
     private void loadingMethod() {
         switch (choiceMethod.getSelectionModel().getSelectedIndex()) {
-            case 0:
+            case 0 -> {
                 btnFile1.setDisable(true);
                 btnFile2.setDisable(true);
                 txtSeq1.setDisable(false);
                 txtSeq2.setDisable(false);
-                break;
-            case 1:
+            }
+            case 1 -> {
                 btnFile1.setDisable(false);
                 btnFile2.setDisable(false);
                 txtSeq1.setDisable(true);
                 txtSeq2.setDisable(true);
-                break;
-            case 2:
+            }
+            case 2 -> {
                 btnFile1.setDisable(true);
                 btnFile2.setDisable(true);
                 txtSeq1.setDisable(false);
                 txtSeq2.setDisable(false);
+            }
         }
     }
 
     private void alignmentAlgorithm() {
         switch (choiceAlgorithm.getSelectionModel().getSelectedIndex()) {
-            case 0:
+            case 0 -> {
                 txtComp.setDisable(true);
                 txtInCom.setDisable(true);
                 txtGap.setDisable(true);
                 txtWindow.setDisable(false);
                 txtThreshold.setDisable(false);
-                break;
-            case 1:
+            }
+            case 1 -> {
                 txtComp.setDisable(false);
                 txtInCom.setDisable(false);
                 txtGap.setDisable(false);
                 txtWindow.setDisable(true);
                 txtThreshold.setDisable(true);
-                break;
-            case 2:
+            }
+            case 2 -> {
                 txtComp.setDisable(false);
                 txtInCom.setDisable(false);
                 txtGap.setDisable(false);
                 txtWindow.setDisable(true);
                 txtThreshold.setDisable(true);
+            }
         }
     }
 
@@ -146,21 +148,18 @@ public class Controller {
         try {
 
             switch (choiceMethod.getSelectionModel().getSelectedIndex()) {
-                case 0:
+                case 0 -> {
                     sequence1 = txtSeq1.getText().toString();
                     sequence2 = txtSeq2.getText().toString();
-                    break;
-
-                case 1:
+                }
+                case 1 -> {
                     sequence1 = FASTA.read(new File(txtSeq1.getText().toString()));
                     sequence2 = FASTA.read(new File(txtSeq2.getText().toString()));
-                    break;
-
-                case 2:
+                }
+                case 2 -> {
                     sequence1 = NCBI.getResponse(txtSeq1.getText().toString());
                     sequence2 = NCBI.getResponse(txtSeq2.getText().toString());
-
-
+                }
             }
 
             ArrayList<Path> pathList = new ArrayList<>();
@@ -367,6 +366,7 @@ public class Controller {
     void onClickGraph(ActionEvent event) {
         double min = Double.MAX_VALUE;
         double max = Double.MIN_VALUE;
+
         double[][] scores = needlemanWunsch.getScore();
         for (int i = 0; i < scores.length; i++) {
             for (int j = 0; j < scores[i].length; j++) {
@@ -433,13 +433,9 @@ public class Controller {
         chart.setAxisSortingPolicy(LineChart.SortingPolicy.NONE);
         chart.setLegendVisible(false);
 
-        choiceMethod.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            loadingMethod();
-        });
+        choiceMethod.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> loadingMethod());
 
-        choiceAlgorithm.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            alignmentAlgorithm();
-        });
+        choiceAlgorithm.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> alignmentAlgorithm());
     }
 }
 
