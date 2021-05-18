@@ -1,23 +1,15 @@
 package edu.ib;
 
+import edu.ib.img.PathImage;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -88,11 +80,12 @@ public class Controller {
     private Button btnFile2;
 
     @FXML
-    private LineChart<Integer, Integer> chart;
+    private AnchorPane anchorePane;
+
 
     private void loadingMethod() {
         switch (choiceMethod.getSelectionModel().getSelectedIndex()) {
-            case 0 -> {
+            case 0, 2 -> {
                 btnFile1.setDisable(true);
                 btnFile2.setDisable(true);
                 txtSeq1.setDisable(false);
@@ -103,12 +96,6 @@ public class Controller {
                 btnFile2.setDisable(false);
                 txtSeq1.setDisable(true);
                 txtSeq2.setDisable(true);
-            }
-            case 2 -> {
-                btnFile1.setDisable(true);
-                btnFile2.setDisable(true);
-                txtSeq1.setDisable(false);
-                txtSeq2.setDisable(false);
             }
         }
     }
@@ -122,14 +109,7 @@ public class Controller {
                 txtWindow.setDisable(false);
                 txtThreshold.setDisable(false);
             }
-            case 1 -> {
-                txtComp.setDisable(false);
-                txtInCom.setDisable(false);
-                txtGap.setDisable(false);
-                txtWindow.setDisable(true);
-                txtThreshold.setDisable(true);
-            }
-            case 2 -> {
+            case 1, 2 -> {
                 txtComp.setDisable(false);
                 txtInCom.setDisable(false);
                 txtGap.setDisable(false);
@@ -164,8 +144,10 @@ public class Controller {
 
             ArrayList<Path> pathList = new ArrayList<>();
 
-            char[] charSequence1 = sequence1.toCharArray();
-            char[] charSequence2 = sequence2.toCharArray();
+            String s1 = "-" + sequence1;
+            String s2 = "-" + sequence2;
+            char[] charSequence1 = s1.toCharArray();
+            char[] charSequence2 = s2.toCharArray();
 
             double score = 0;
 
@@ -174,6 +156,8 @@ public class Controller {
             if (choiceAlgorithm.getSelectionModel().getSelectedIndex() == 0) {
                 int win = Integer.parseInt(txtWindow.getText().toString());
                 int thres = Integer.parseInt(txtThreshold.getText().toString());
+
+                dotPlot.findPath(sequence1, sequence2, win, thres);
 
                 result.append("# 1: ");
                 result.append(sequence1);
@@ -189,6 +173,7 @@ public class Controller {
                 result.append("\n");
                 result.append("\n");
 
+                txtParam.setText(result.toString());
 
             } else {
                 double comp = Double.parseDouble(txtComp.getText().toString());
@@ -204,117 +189,251 @@ public class Controller {
 
                 if (choiceAlgorithm.getSelectionModel().getSelectedIndex() == 1) {
                     pathList = needlemanWunsch.findPath(sequence1, sequence2, comp, incomp, g);
-                     score = needlemanWunsch.getScoreValue();
+                    score = needlemanWunsch.getScoreValue();
+
+                    result.append("# 1: ");
+                    result.append(sequence1);
+                    result.append("\n");
+                    result.append("# 2: ");
+                    result.append(sequence2);
+                    result.append("\n");
+                    result.append("# Match: ");
+                    result.append(match);
+                    result.append("\n");
+                    result.append("# Mismatch: ");
+                    result.append(mismatch);
+                    result.append("\n");
+                    result.append("# Gap: ");
+                    result.append(gap);
+                    result.append("\n");
+                    result.append("# Score: ");
+                    result.append(score);
+                    result.append("\n");
+                    result.append("\n");
+
+                    for (int i = 0; i < pathList.size(); i++) {
+                        int identity = 0;
+                        int gaps = 0;
+
+                        StringBuilder seq1 = new StringBuilder();
+                        StringBuilder lines = new StringBuilder();
+                        StringBuilder seq2 = new StringBuilder();
+
+                        for (int j = pathList.get(i).size() - 2; j >= 0; j--) {
+                            int xLast = pathList.get(i).getPoint(j + 1)[0];
+                            int yLast = pathList.get(i).getPoint(j + 1)[1];
+                            int x = pathList.get(i).getPoint(j)[0];
+                            int y = pathList.get(i).getPoint(j)[1];
+
+                            if (xLast + 1 == x && yLast + 1 == y) {
+                                seq1.append(charSequence1[x]);
+                                seq2.append(charSequence2[y]);
+                                if (charSequence1[x] == charSequence2[y]) {
+                                    lines.append("|");
+                                    identity++;
+                                } else {
+                                    lines.append(" ");
+                                }
+                            } else if (xLast + 1 == x && yLast == y) {
+                                seq1.append(charSequence1[x]);
+                                seq2.append("-");
+                                lines.append(" ");
+                                gaps++;
+                            } else if (xLast == x && yLast + 1 == y) {
+                                seq1.append("-");
+                                seq2.append(charSequence2[y]);
+                                lines.append(" ");
+                                gaps++;
+                            }
+                        }
+
+                        result.append("# Length: ");
+                        result.append(pathList.get(i).size() - 1);
+                        result.append("\n");
+
+                        result.append("# Identity: ");
+                        result.append(identity);
+                        result.append("/");
+                        result.append(pathList.get(i).size() - 1);
+                        result.append(" (");
+                        result.append(Math.round((double) identity / (pathList.get(i).size() - 1) * 100));
+                        result.append(")");
+                        result.append("\n");
+
+                        result.append("# Gaps: ");
+                        result.append(gaps);
+                        result.append("/");
+                        result.append(pathList.get(i).size() - 1);
+                        result.append(" (");
+                        result.append(Math.round((double) gaps / (pathList.get(i).size() - 1) * 100));
+                        result.append(")");
+                        result.append("\n");
+
+                        result.append(seq1);
+                        result.append("\n");
+
+                        result.append(lines);
+                        result.append("\n");
+
+                        result.append(seq2);
+                        result.append("\n");
+                        result.append("\n");
+
+                        if (i == 0) {
+                            txtParam.setText(result.toString());
+                        }
+
+                    }
+
+                    textFile = result.toString();
+
                 } else {
                     pathList = smithWaterman.findPath(sequence1, sequence2, comp, incomp, g);
                     score = smithWaterman.getScoreValue();
-                }
 
-                result.append("# 1: ");
-                result.append(sequence1);
-                result.append("\n");
-                result.append("# 2: ");
-                result.append(sequence2);
-                result.append("\n");
-                result.append("# Match: ");
-                result.append(match);
-                result.append("\n");
-                result.append("# Mismatch: ");
-                result.append(mismatch);
-                result.append("\n");
-                result.append("# Gap: ");
-                result.append(gap);
-                result.append("\n");
-                result.append("# Score: ");
-                result.append(score);
-                result.append("\n");
-                result.append("\n");
+                    result.append("# 1: ");
+                    result.append(sequence1);
+                    result.append("\n");
+                    result.append("# 2: ");
+                    result.append(sequence2);
+                    result.append("\n");
+                    result.append("# Match: ");
+                    result.append(match);
+                    result.append("\n");
+                    result.append("# Mismatch: ");
+                    result.append(mismatch);
+                    result.append("\n");
+                    result.append("# Gap: ");
+                    result.append(gap);
+                    result.append("\n");
+                    result.append("# Score: ");
+                    result.append(score);
+                    result.append("\n");
+                    result.append("\n");
 
-                for (int i = 0; i < pathList.size(); i++) {
-                    int identity = 0;
-                    int gaps = 0;
+                    for (int i = 0; i < pathList.size(); i++) {
+                        int identity = 0;
+                        int gaps = 0;
 
-                    StringBuilder seq1 = new StringBuilder();
-                    StringBuilder lines = new StringBuilder();
-                    StringBuilder seq2 = new StringBuilder();
+                        StringBuilder seq1 = new StringBuilder();
+                        StringBuilder lines = new StringBuilder();
+                        StringBuilder seq2 = new StringBuilder();
 
-                    for (int j = pathList.get(i).size() - 2; j >= 0; j--) {
-                        int xLast = pathList.get(i).getPoint(j + 1)[0];
-                        int yLast = pathList.get(i).getPoint(j + 1)[1];
-                        int x = pathList.get(i).getPoint(j)[0];
-                        int y = pathList.get(i).getPoint(j)[1];
+                        int l = pathList.get(i).size();
 
-                        if (xLast + 1 == x && yLast + 1 == y) {
-                            seq1.append(charSequence1[x - 1]);
-                            seq2.append(charSequence2[y - 1]);
-                            if (charSequence1[x - 1] == charSequence2[y - 1]) {
-                                lines.append("|");
-                                identity++;
-                            } else {
-                                lines.append(" ");
-                            }
-                        } else if (xLast + 1 == x && yLast == y) {
-                            seq1.append(charSequence1[x - 1]);
-                            seq2.append("-");
-                            lines.append(" ");
-                            gaps++;
-                        } else if (xLast == x && yLast + 1 == y) {
-                            seq1.append("-");
-                            seq2.append(charSequence2[y - 1]);
-                            lines.append(" ");
-                            gaps++;
+                        ArrayList<Path> temp = new ArrayList<>();
+                        for (int k = 0; k < pathList.size(); k++) {
+                            temp.add(new Path(pathList.get(k)));
                         }
-                    }
 
-                    result.append("# Length: ");
-                    result.append(pathList.get(i).size());
-                    result.append("\n");
+                        if (temp.get(i).getPoint(temp.get(i).size() - 1)[0] == 0 && temp.get(i).getPoint(temp.get(i).size() - 1)[1] == 0) {
+                            l--;
+                        } else {
+                            temp.get(i).addPoint(0, 0);
+                        }
 
-                    result.append("# Identity: ");
-                    result.append(identity);
-                    result.append("/");
-                    result.append(pathList.get(i).size());
-                    result.append(" (");
-                    result.append(Math.round((double) identity / pathList.get(i).size() * 100));
-                    result.append(")");
-                    result.append("\n");
+                        for (int j = temp.get(i).size() - 2; j >= 0; j--) {
+                            int xLast = temp.get(i).getPoint(j + 1)[0];
+                            int yLast = temp.get(i).getPoint(j + 1)[1];
+                            int x = temp.get(i).getPoint(j)[0];
+                            int y = temp.get(i).getPoint(j)[1];
 
-                    result.append("# Gaps: ");
-                    result.append(gaps);
-                    result.append("/");
-                    result.append(pathList.get(i).size());
-                    result.append(" (");
-                    result.append(Math.round((double) gaps / pathList.get(i).size() * 100));
-                    result.append(")");
-                    result.append("\n");
+                            if (xLast + 1 == x && yLast == y) {
+                                seq1.append(charSequence1[x]);
+                                seq2.append("-");
+                                lines.append(" ");
+                                gaps++;
+                            } else if (xLast == x && yLast + 1 == y) {
+                                seq1.append("-");
+                                seq2.append(charSequence2[y]);
+                                lines.append(" ");
+                                gaps++;
+                            } else {
+                                if (y >= 0)
+                                    seq1.append(charSequence1[x]);
+                                else
+                                    seq1.append("-");
 
-                    result.append(seq1);
-                    result.append("\n");
+                                if (x >= 0)
+                                    seq2.append(charSequence2[y]);
+                                else
+                                    seq2.append("-");
 
-                    result.append(lines);
-                    result.append("\n");
+                                if (y - 1 >= 0 && x - 1 >= 0) {
+                                    if (charSequence1[x] == charSequence2[y]) {
+                                        identity++;
+                                        lines.append("|");
+                                    } else {
+                                        lines.append(" ");
+                                    }
+                                } else {
+                                    lines.append(" ");
+                                }
+                            }
+                        }
 
-                    result.append(seq2);
-                    result.append("\n");
-                    result.append("\n");
+                        result.append("# Length: ");
+                        result.append(l);
+                        result.append("\n");
 
-                    if (i == 0) {
-                        txtParam.setText(result.toString());
+                        result.append("# Identity: ");
+                        result.append(identity);
+                        result.append("/");
+                        result.append(l);
+                        result.append(" (");
+                        result.append(Math.round((double) identity / l * 100));
+                        result.append(")");
+                        result.append("\n");
+
+                        result.append("# Gaps: ");
+                        result.append(gaps);
+                        result.append("/");
+                        result.append(l);
+                        result.append(" (");
+                        result.append(Math.round((double) gaps / l * 100));
+                        result.append(")");
+                        result.append("\n");
+
+                        result.append(seq1);
+                        result.append("\n");
+
+                        result.append(lines);
+                        result.append("\n");
+
+                        result.append(seq2);
+                        result.append("\n");
+                        result.append("\n");
+
+                        if (i == 0) {
+                            txtParam.setText(result.toString());
+                        }
+
+                        textFile = result.toString();
+
                     }
                 }
-
-                XYChart.Series<Integer, Integer> data = new XYChart.Series<>();
-                for (int i = 0; i < pathList.get(0).size(); i++) {
-                    data.getData().add(new XYChart.Data<>(pathList.get(0).getPoint(i)[0], -pathList.get(0).getPoint(i)[1]));
-                }
-                chart.getData().clear();
-                chart.getData().add(data);
             }
 
-            textFile = result.toString();
+            ArrayList<Path> pathTemp;
+            if (pathList.size() < 8) {
+                pathTemp = new ArrayList<>(pathList);
+            } else {
+                pathTemp = new ArrayList<>();
+                pathTemp.add(pathList.get(0));
+            }
 
+            PathImage pathImage;
+            if (choiceAlgorithm.getSelectionModel().getSelectedIndex() == 0) {
+                pathImage = new PathImage(dotPlot.getFiltration(), anchorePane);
+            } else if (choiceAlgorithm.getSelectionModel().getSelectedIndex() == 1) {
+                pathImage = new PathImage(needlemanWunsch.getScore(), pathTemp, anchorePane);
+            } else if (choiceAlgorithm.getSelectionModel().getSelectedIndex() == 2) {
+                pathImage = new PathImage(smithWaterman.getScore(), pathTemp, anchorePane);
+            } else {
+                throw new IllegalArgumentException();
+            }
 
-
+            pathImage.generate();
 
         } catch (NumberFormatException e) {
             txtParam.setText("Nalezy wpisac liczby");
@@ -329,6 +448,8 @@ public class Controller {
             txtParam.setText("Blad polaczenia z baza");
             e.printStackTrace();
         }
+
+
     }
 
     @FXML
@@ -363,46 +484,6 @@ public class Controller {
     }
 
     @FXML
-    void onClickGraph(ActionEvent event) {
-        double min = Double.MAX_VALUE;
-        double max = Double.MIN_VALUE;
-
-        double[][] scores = needlemanWunsch.getScore();
-        for (int i = 0; i < scores.length; i++) {
-            for (int j = 0; j < scores[i].length; j++) {
-                min = Math.min(scores[i][j], min);
-                max = Math.max(scores[i][j], max);
-            }
-        }
-        WritableImage image = new WritableImage(500, 500);
-        PixelWriter pixelWriter = image.getPixelWriter();
-        double r = max - min;
-        double h = image.getHeight() / scores.length;
-        double w = image.getWidth() / scores[0].length;
-        for (int i = 0; i < image.getHeight(); i++) {
-            for (int j = 0; j < image.getWidth(); j++) {
-                int y = (int) (i / h);
-                int x = (int) (j / w);
-
-                int color = (int) ((scores[y][x] - min) / r * 255);
-
-                pixelWriter.setColor(j, i, Color.grayRgb(color));
-            }
-        }
-        Stage stage = new Stage();
-        stage.initModality(Modality.NONE);
-        stage.initOwner(((Button) event.getSource()).getParent().getScene().getWindow());
-        AnchorPane anchorPane = new AnchorPane();
-        ImageView imageView = new ImageView();
-        imageView.setImage(image);
-        anchorPane.getChildren().add(imageView);
-        Scene scene = new Scene(anchorPane, image.getWidth(), image.getHeight());
-        stage.setScene(scene);
-        stage.show();
-    }
-
-
-    @FXML
     void initialize() {
         assert txtComp != null : "fx:id=\"txtComp\" was not injected: check your FXML file 'graph.fxml'.";
         assert txtInCom != null : "fx:id=\"txtInCom\" was not injected: check your FXML file 'graph.fxml'.";
@@ -416,7 +497,7 @@ public class Controller {
         assert btnFile1 != null : "fx:id=\"btnFile1\" was not injected: check your FXML file 'graph.fxml'.";
         assert txtSeq2 != null : "fx:id=\"txtSeq2\" was not injected: check your FXML file 'graph.fxml'.";
         assert btnFile2 != null : "fx:id=\"btnFile2\" was not injected: check your FXML file 'graph.fxml'.";
-        assert chart != null : "fx:id=\"chart\" was not injected: check your FXML file 'graph.fxml'.";
+        assert anchorePane != null : "fx:id=\"anchorePane\" was not injected: check your FXML file 'graph.fxml'.";
 
         algorithm.add("kropkowy");
         algorithm.add("Needlemana-Wunscha");
@@ -430,8 +511,6 @@ public class Controller {
         choiceMethod.setItems(method);
         choiceMethod.getSelectionModel().select(0);
 
-        chart.setAxisSortingPolicy(LineChart.SortingPolicy.NONE);
-        chart.setLegendVisible(false);
 
         choiceMethod.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> loadingMethod());
 

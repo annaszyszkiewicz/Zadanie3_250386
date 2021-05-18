@@ -17,7 +17,8 @@ public class Main extends Application {
     public void start(Stage stage) throws IOException {
 
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/graph.fxml"));
-        Scene scene = new Scene(root, 800, 600);
+        Scene scene = new Scene(root, 1500, 900);
+        stage.setFullScreen(true);
         stage.setScene(scene);
         stage.show();
 

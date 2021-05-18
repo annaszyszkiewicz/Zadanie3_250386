@@ -14,17 +14,18 @@ public class DotPlot {
         char[] s2 = seq2.toCharArray();
 
         matrix = new boolean[n][m];
+        filtration = new boolean[n][m];
 
-        for (int i = 0; i <= matrix[0].length; i++) {
-            for (int j = 0; j <= matrix.length; j++) {
+        for (int i = 0; i < matrix[0].length; i++) {
+            for (int j = 0; j < matrix.length; j++) {
                 if (s1[j] == s2[i]) {
                     matrix[j][i] = true;
                 }
             }
         }
 
-        for(int i = 0; i<=m-window; i++){
-            for(int j = 0; j<=n-window; j++){
+        for(int i = 0; i<n-window; i++){
+            for(int j = 0; j<m-window; j++){
                 if(matrix[i][j]){
                     int v = 0;
                     for(int k=0; k<window; k++)
@@ -35,6 +36,10 @@ public class DotPlot {
                 }
             }
         }
+        return filtration;
+    }
+
+    public boolean[][] getFiltration() {
         return filtration;
     }
 }

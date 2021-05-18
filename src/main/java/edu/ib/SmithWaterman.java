@@ -48,20 +48,20 @@ public class SmithWaterman {
 
                 if (s1[j - 1] == s2[i - 1]) {
                     v1 = score[j - 1][i - 1] + compatibility;
-                    if(v1<0)
-                        v1=0;
+                    if (v1 < 0)
+                        v1 = 0;
                 } else {
                     v1 = score[j - 1][i - 1] + incompatibility;
-                    if(v1<0)
-                        v1=0;
+                    if (v1 < 0)
+                        v1 = 0;
                 }
 
                 v2 = score[j - 1][i] + gap;
-                if(v2<0)
-                    v2=0;
+                if (v2 < 0)
+                    v2 = 0;
                 v3 = score[j][i - 1] + gap;
-                if(v3<0)
-                    v3=0;
+                if (v3 < 0)
+                    v3 = 0;
 
                 double max = Math.max(v3, (Math.max(v1, v2)));
 
@@ -93,12 +93,12 @@ public class SmithWaterman {
         ArrayList<Integer> yNew = new ArrayList<>();
         ArrayList<Integer> yOld = new ArrayList<>();
 
-        for(int i = 0; i < score.length; i++){
-            for(int j = 0; j <score[i].length; j++){
-                if(score[i][j] == maxValue){
+        for (int i = 0; i < score.length; i++) {
+            for (int j = 0; j < score[i].length; j++) {
+                if (score[i][j] == maxValue) {
                     path.add(new Path());
-                    path.get(path.size()-1).addPoint(i,j);
-                    oldPathNumber.add(path.size()-1);
+                    path.get(path.size() - 1).addPoint(i, j);
+                    oldPathNumber.add(path.size() - 1);
                     xOld.add(i);
                     yOld.add(j);
 
@@ -188,20 +188,20 @@ public class SmithWaterman {
         ArrayList<Integer> x = new ArrayList<>();
         ArrayList<Integer> y = new ArrayList<>();
 
-        for(int i = 0; i < path.size(); i++){
-            for(int j = 1; j < path.get(i).size(); j++){
+        for (int i = 0; i < path.size(); i++) {
+            for (int j = 1; j < path.get(i).size(); j++) {
                 int[] xy = path.get(i).getPoint(j);
-                if(score[xy[0]][xy[1]]==maxValue){
+                if (score[xy[0]][xy[1]] == maxValue) {
                     x.add(xy[0]);
                     y.add(xy[1]);
                 }
             }
         }
 
-        for(int i = path.size()-1; i >= 0; i--){
+        for (int i = path.size() - 1; i >= 0; i--) {
             int[] start = path.get(i).getPoint(0);
-            for(int j = 0; j < x.size(); j++){
-                if(start[0] == x.get(j) && start[1] == y.get(j)){
+            for (int j = 0; j < x.size(); j++) {
+                if (start[0] == x.get(j) && start[1] == y.get(j)) {
                     path.remove(i);
                     break;
                 }
@@ -211,7 +211,13 @@ public class SmithWaterman {
     }
 
     public double getScoreValue() {
-        return score[score.length - 1][score[score.length - 1].length - 1];
+        double max = Double.MIN_VALUE;
+        for (int i = 0; i < score.length; i++) {
+            for (int j = 0; j < score[i].length; j++) {
+                max = Math.max(max, score[i][j]);
+            }
+        }
+        return max;
     }
 
     public double[][] getScore() {

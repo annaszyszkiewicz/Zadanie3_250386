@@ -45,4 +45,18 @@ public class Path {
     public ArrayList<Integer> getY() {
         return y;
     }
+
+    @Override
+    public String toString(){
+        StringBuilder stringBuilder = new StringBuilder();
+        for(int i=0; i<x.size(); i++){
+            stringBuilder.append("(");
+            stringBuilder.append(x.get(i));
+            stringBuilder.append(",");
+            stringBuilder.append(y.get(i));
+            stringBuilder.append(")");
+            stringBuilder.append(";");
+        }
+        return stringBuilder.toString();
+    }
 }

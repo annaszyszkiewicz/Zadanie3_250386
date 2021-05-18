@@ -34,7 +34,7 @@ public class Line implements DrawableObject {
             }
         } else if(y1==y2){
             for(int i=Math.min(x1,x2);i<=Math.max(x1,x2);i++){
-                if(i>=0 && i<image.getWidth()){
+                if(i>=0 && i<image.getWidth() && y1-1>=0 && y1+1<image.getHeight()){
                     writer.setColor(i,y1,color);
                     writer.setColor(i,y1-1,color);
                     writer.setColor(i,y1+1,color);

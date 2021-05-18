@@ -173,7 +173,7 @@ public class NeedlemanWunsch {
         return score[score.length - 1][score[score.length - 1].length - 1];
     }
 
-    public  double[][] getScore(){
+    public double[][] getScore() {
         return score;
     }
 
